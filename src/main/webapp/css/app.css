@@ -145,6 +145,12 @@ input[type="text"]:focus {
     background: var(--accent-hover);
 }
 
+.btn-link {
+    display: inline-block;
+    text-decoration: none;
+    margin-top: 1rem;
+}
+
 .game-form {
     display: flex;
     flex-direction: column;
