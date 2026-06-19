@@ -50,7 +50,7 @@
             <p class="error">${errorMessage}</p>
         </c:if>
 
-        <form class="welcome-form" action="${pageContext.request.contextPath}/welcome" method="post">
+        <form class="welcome-form" action="${pageContext.request.contextPath}/welcome" method="post" accept-charset="UTF-8">
             <label class="field">
                 <span class="field-label">Имя командира</span>
                 <input type="text" name="playerName" placeholder="Введите имя" maxlength="64" required>

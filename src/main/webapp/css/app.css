@@ -145,6 +145,53 @@ input[type="text"]:focus {
     background: var(--accent-hover);
 }
 
+.game-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.choices {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.choice {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    cursor: pointer;
+}
+
+.choice input {
+    margin-top: 0.25rem;
+}
+
+.choice span {
+    flex: 1;
+}
+
+.outcome {
+    padding: 1rem 1.25rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+}
+
+.outcome-win {
+    border-color: #4a7c59;
+}
+
+.outcome-lose {
+    border-color: #7c4a4a;
+}
+
 .stats {
     margin-top: auto;
     padding-top: 1.5rem;

@@ -1,8 +1,6 @@
 package ru.javarush.textadventure.web;
 
 import ru.javarush.textadventure.model.GameSession;
-import ru.javarush.textadventure.model.GameResult;
-import ru.javarush.textadventure.model.GameState;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,8 +22,7 @@ public class RestartServlet extends HttpServlet {
         }
 
         gameSession.setGamesPlayed(gameSession.getGamesPlayed() + 1);
-        gameSession.setCurrentState(GameState.START);
-        gameSession.setGameResult(GameResult.IN_PROGRESS);
+        gameSession.resetForNewGame();
         response.sendRedirect(request.getContextPath() + "/game");
     }
 }

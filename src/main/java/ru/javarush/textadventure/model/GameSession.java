@@ -12,6 +12,8 @@ public class GameSession implements Serializable {
     private int gamesPlayed;
     private GameState currentState = GameState.START;
     private GameResult gameResult = GameResult.IN_PROGRESS;
+    private boolean escortArrived;
+    private String outcomeMessage;
 
     public String getPlayerName() {
         return playerName;
@@ -43,5 +45,28 @@ public class GameSession implements Serializable {
 
     public void setGameResult(GameResult gameResult) {
         this.gameResult = gameResult;
+    }
+
+    public boolean isEscortArrived() {
+        return escortArrived;
+    }
+
+    public void setEscortArrived(boolean escortArrived) {
+        this.escortArrived = escortArrived;
+    }
+
+    public String getOutcomeMessage() {
+        return outcomeMessage;
+    }
+
+    public void setOutcomeMessage(String outcomeMessage) {
+        this.outcomeMessage = outcomeMessage;
+    }
+
+    public void resetForNewGame() {
+        currentState = GameState.START;
+        gameResult = GameResult.IN_PROGRESS;
+        escortArrived = false;
+        outcomeMessage = null;
     }
 }
