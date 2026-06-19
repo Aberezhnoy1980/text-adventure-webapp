@@ -12,6 +12,7 @@ import ru.javarush.textadventure.model.GameStep;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -99,7 +100,7 @@ class GameEngineTest {
 
         assertEquals(GameState.ON_BRIDGE, session.getCurrentState());
         assertTrue(session.isEscortArrived());
-        assertTrue(gameEngine.getCurrentStep(session).question().contains("Escort"));
+        assertTrue(gameEngine.getCurrentStep(session).getQuestion().contains("Escort"));
     }
 
     @Test
@@ -116,8 +117,13 @@ class GameEngineTest {
     void startStep_containsBaselineAndExtraChoices() {
         GameStep step = gameEngine.getCurrentStep(session);
 
-        assertEquals("Ты потерял память? Принять вызов НЛО?", step.question());
-        assertEquals(3, step.options().size());
+        assertEquals("Ты потерял память? Принять вызов НЛО?", step.getQuestion());
+        assertEquals(3, step.getOptions().size());
+    }
+
+    @Test
+    void getCurrentStep_requiresSession() {
+        assertThrows(NullPointerException.class, () -> gameEngine.getCurrentStep(null));
     }
 
     @Test
@@ -134,20 +140,30 @@ class GameEngineTest {
 
     @ParameterizedTest
     @EnumSource(value = GameChoice.class, names = {"ACCEPT", "REJECT", "INQUIRE"})
-    void startState_acceptsOnlyStartChoices(GameChoice choice) {
-        assertTrue(gameEngine.isValidChoice(GameState.START, choice));
+    void submitChoice_acceptsValidStartChoices(GameChoice choice) {
+        assertNull(gameEngine.submitChoice(session, choice.name()));
     }
 
     @Test
-    void parseChoice_returnsEmptyForBlankValue() {
-        assertTrue(gameEngine.parseChoice(null).isEmpty());
-        assertTrue(gameEngine.parseChoice("   ").isEmpty());
-        assertTrue(gameEngine.parseChoice("UNKNOWN").isEmpty());
+    void submitChoice_returnsErrorForBlankValue() {
+        assertEquals("Выберите вариант ответа.", gameEngine.submitChoice(session, null));
+        assertEquals("Выберите вариант ответа.", gameEngine.submitChoice(session, "   "));
     }
 
     @Test
-    void parseChoice_parsesValidEnumName() {
-        assertEquals(GameChoice.ACCEPT, gameEngine.parseChoice("ACCEPT").orElseThrow());
+    void submitChoice_returnsErrorForUnknownValue() {
+        assertEquals("Выберите вариант ответа.", gameEngine.submitChoice(session, "UNKNOWN"));
+    }
+
+    @Test
+    void submitChoice_returnsErrorForChoiceInvalidInCurrentState() {
+        assertEquals("Выберите вариант ответа.", gameEngine.submitChoice(session, GameChoice.LIE.name()));
+    }
+
+    @Test
+    void submitChoice_appliesValidChoice() {
+        assertNull(gameEngine.submitChoice(session, GameChoice.ACCEPT.name()));
+        assertEquals(GameState.ACCEPTED_CHALLENGE, session.getCurrentState());
     }
 
     @Test

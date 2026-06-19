@@ -15,12 +15,12 @@ public class RestartServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        GameSession gameSession = SessionSupport.getGameSession(request);
-        if (gameSession == null) {
+        if (!SessionSupport.hasRegisteredPlayer(request)) {
             response.sendRedirect(request.getContextPath() + "/welcome");
             return;
         }
 
+        GameSession gameSession = SessionSupport.getRegisteredPlayer(request);
         gameSession.setGamesPlayed(gameSession.getGamesPlayed() + 1);
         gameSession.resetForNewGame();
         response.sendRedirect(request.getContextPath() + "/game");

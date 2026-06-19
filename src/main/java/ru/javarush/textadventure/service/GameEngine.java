@@ -9,12 +9,16 @@ import ru.javarush.textadventure.model.GameStep;
 
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.Set;
 
 public class GameEngine {
 
+    private static final String CHOICE_REQUIRED_MESSAGE = "Выберите вариант ответа.";
+
     public GameStep getCurrentStep(GameSession session) {
+        Objects.requireNonNull(session, "session");
+
         if (isGameFinished(session)) {
             return new GameStep(session.getOutcomeMessage(), List.of());
         }
@@ -42,7 +46,26 @@ public class GameEngine {
         };
     }
 
+    public String submitChoice(GameSession session, String rawValue) {
+        Objects.requireNonNull(session, "session");
+
+        if (isGameFinished(session)) {
+            return null;
+        }
+
+        GameChoice choice = resolveChoice(rawValue, session.getCurrentState());
+        if (choice == null) {
+            return CHOICE_REQUIRED_MESSAGE;
+        }
+
+        applyChoice(session, choice);
+        return null;
+    }
+
     public void applyChoice(GameSession session, GameChoice choice) {
+        Objects.requireNonNull(session, "session");
+        Objects.requireNonNull(choice, "choice");
+
         if (isGameFinished(session)) {
             throw new IllegalStateException("Game is already finished");
         }
@@ -61,21 +84,24 @@ public class GameEngine {
     }
 
     public boolean isGameFinished(GameSession session) {
+        Objects.requireNonNull(session, "session");
         return session.getGameResult() != GameResult.IN_PROGRESS;
     }
 
-    public Optional<GameChoice> parseChoice(String rawValue) {
+    private GameChoice resolveChoice(String rawValue, GameState state) {
         if (rawValue == null || rawValue.isBlank()) {
-            return Optional.empty();
+            return null;
         }
+
         try {
-            return Optional.of(GameChoice.valueOf(rawValue.trim()));
+            GameChoice choice = GameChoice.valueOf(rawValue.trim());
+            return isValidChoice(state, choice) ? choice : null;
         } catch (IllegalArgumentException ex) {
-            return Optional.empty();
+            return null;
         }
     }
 
-    public boolean isValidChoice(GameState state, GameChoice choice) {
+    private boolean isValidChoice(GameState state, GameChoice choice) {
         return getValidChoices(state).contains(choice);
     }
 

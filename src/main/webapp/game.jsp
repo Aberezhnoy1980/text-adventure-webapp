@@ -14,22 +14,22 @@
         <p class="eyebrow">Командир ${sessionScope.gameSession.playerName}</p>
 
         <c:choose>
-            <c:when test="${gameFinished}">
+            <c:when test="${gameView.finished}">
                 <h1>Миссия завершена</h1>
             </c:when>
             <c:otherwise>
-                <h1>${currentStep.question}</h1>
+                <h1>${gameView.question}</h1>
             </c:otherwise>
         </c:choose>
 
-        <c:if test="${not empty errorMessage}">
-            <p class="error">${errorMessage}</p>
+        <c:if test="${not empty gameView.errorMessage}">
+            <p class="error">${gameView.errorMessage}</p>
         </c:if>
 
         <c:choose>
-            <c:when test="${gameFinished}">
+            <c:when test="${gameView.finished}">
                 <p class="outcome ${sessionScope.gameSession.gameResult eq 'VICTORY' ? 'outcome-win' : 'outcome-lose'}">
-                    ${currentStep.question}
+                    ${gameView.question}
                 </p>
                 <form class="game-form" action="${pageContext.request.contextPath}/restart" method="post" accept-charset="UTF-8">
                     <button type="submit" class="btn">Начать заново</button>
@@ -38,7 +38,7 @@
             <c:otherwise>
                 <form class="game-form" action="${pageContext.request.contextPath}/game" method="post" accept-charset="UTF-8">
                     <div class="choices">
-                        <c:forEach var="option" items="${currentStep.options}">
+                        <c:forEach var="option" items="${gameView.options}">
                             <label class="choice">
                                 <input type="radio" name="choice" value="${option.choice}">
                                 <span>${option.label}</span>
@@ -53,7 +53,7 @@
 
     <footer class="stats">
         <p class="stats-title">Статистика</p>
-        <p>IP address: ${clientIp}</p>
+        <p>IP address: ${gameView.clientIp}</p>
         <p>Имя в игре: ${sessionScope.gameSession.playerName}</p>
         <p>Количество игр: ${sessionScope.gameSession.gamesPlayed}</p>
     </footer>

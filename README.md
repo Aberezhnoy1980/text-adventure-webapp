@@ -40,8 +40,8 @@ START ──► ACCEPTED_CHALLENGE ──► ON_BRIDGE ──► VICTORY / DEFEA
 
 ```text
 src/main/java/ru/javarush/textadventure/
-├── model/          # GameState, GameChoice, GameSession
-├── service/        # GameEngine — логика переходов
+├── model/          # GameState, GameChoice, GameSession, GameView
+├── service/        # GameEngine, GameService
 └── web/            # Servlets, CharacterEncodingFilter, SessionSupport
 
 src/main/webapp/

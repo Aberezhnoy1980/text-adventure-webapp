@@ -1,6 +1,14 @@
 package ru.javarush.textadventure.model;
 
-public record ChoiceOption(GameChoice choice, String label) {
+public class ChoiceOption {
+
+    private final GameChoice choice;
+    private final String label;
+
+    public ChoiceOption(GameChoice choice, String label) {
+        this.choice = choice;
+        this.label = label;
+    }
 
     public GameChoice getChoice() {
         return choice;
